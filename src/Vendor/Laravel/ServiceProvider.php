@@ -73,7 +73,7 @@ class ServiceProvider extends PragmaRXServiceProvider
     {
         parent::boot();
 
-        if (!$this->getConfig('enabled')) {
+        if (! $this->getConfig('enabled')) {
             return false;
         }
 
@@ -81,7 +81,7 @@ class ServiceProvider extends PragmaRXServiceProvider
 
         $this->registerErrorHandler();
 
-        $this->bootTracker();
+        //$this->bootTracker();
 
         $this->loadTranslations();
     }
@@ -383,7 +383,7 @@ class ServiceProvider extends PragmaRXServiceProvider
     {
         $model = $this->getConfig($modelName);
 
-        if (!$model) {
+        if (! $model) {
             $message = "Tracker: Model not found for '$modelName'.";
 
             $this->app['log']->error($message);
@@ -406,7 +406,7 @@ class ServiceProvider extends PragmaRXServiceProvider
     {
         $me = $this;
 
-        if (!class_exists('Illuminate\Database\Events\QueryExecuted')) {
+        if (! class_exists('Illuminate\Database\Events\QueryExecuted')) {
             $this->app['events']->listen('illuminate.query', function (
                 $query,
                 $bindings,
@@ -452,7 +452,7 @@ class ServiceProvider extends PragmaRXServiceProvider
         });
 
         $this->app['events']->listen('*', function ($object = null) use ($me) {
-            if ($me->app['tracker.events']->isOff() || !$me->isFullyBooted()) {
+            if ($me->app['tracker.events']->isOff() || ! $me->isFullyBooted()) {
                 return;
             }
 
@@ -479,7 +479,7 @@ class ServiceProvider extends PragmaRXServiceProvider
 
     protected function loadRoutes()
     {
-        if (!$this->getConfig('stats_panel_enabled')) {
+        if (! $this->getConfig('stats_panel_enabled')) {
             return false;
         }
 
@@ -593,10 +593,11 @@ class ServiceProvider extends PragmaRXServiceProvider
             }, $bindings);
 
             $all_bindings_resolved =
-                (!in_array(false, $checked_bindings, true)) ?: false;
+                (! in_array(false, $checked_bindings, true)) ?: false;
 
-            if ($me->tracker &&
-                !$me->userChecked &&
+            if (
+                $me->tracker &&
+                ! $me->userChecked &&
                 $me->getConfig('log_users') &&
                 $all_bindings_resolved
             ) {
@@ -610,7 +611,7 @@ class ServiceProvider extends PragmaRXServiceProvider
      */
     public function getTracker()
     {
-        if (!$this->tracker) {
+        if (! $this->tracker) {
             $this->tracker = $this->app['tracker'];
         }
 
